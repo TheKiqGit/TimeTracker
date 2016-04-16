@@ -1,9 +1,18 @@
 var express = require('express');
-var router = express.Router();
+var userRouter = express.Router();
+var passport = require('passport');
+var User = require('../models/user');
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+userRouter.route('/')
+  .get(function(req, res, next) {
+      User.forge({'username':'eortega'})
+      .fetch()
+      .then(function (user) {
+        res.json(user);
+      });
+  });
 
-module.exports = router;
+
+
+module.exports = userRouter;
