@@ -1,7 +1,31 @@
 var DB = require('../config/db-mysql-bookshelf').DB;
+var bcrypt = require('bcrypt-nodejs');
+var Promise = require('bluebird');
 
 var User = DB.Model.extend({
-   tableName: 'users' 
+   tableName: 'users',
+   idAtrribute: '_id',
+   initialize: function () {
+       this.on('creating', this.hashPassword, this);
+   },
+   hashPassword: function(model, attrs, options){
+       var hash = bcrypt.hashSync(model.attributes.password, bcrypt.genSaltSync(10));
+       model.set('password', hash);
+   }
 });
 
-module.exports = User;
+var Users = DB.Collection.extend({
+    model: User 
+});
+
+//methods
+
+//generate hash
+//User.methods.generateHash = function(password){
+//    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+//};
+
+module.exports = {
+    User : User,
+    Users : Users   
+}
