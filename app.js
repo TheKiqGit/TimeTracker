@@ -29,9 +29,9 @@ app.use(cookieParser());
 app.all('/*', function(req, res, next){
   //CORS headers
   res.header("Access-Control-Allow-Origin", "*"); 
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIPNS');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
   //custom headers for CORS
-  res.header('Access-Control-Allow-Headers', 'Content-Type, Accept, X-Access-Token, X-key');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Accept, X-Access-Token');
   if (req.method == 'OPTIONS') {
     res.status(200).end();
   } else {
@@ -59,7 +59,8 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);
-app.use('/Users', users);
+//app.use('/Users', users);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

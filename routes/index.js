@@ -11,8 +11,10 @@ var userRouter = require('./users');
 
 
 /* User routes */
-//router.get('/api/v1/users', userRouter.getAll);
-
+router.get('/api/v1/users', userRouter.getAll);
+router.get('/api/v1/logout', userRouter.signOut)
+router.post('/api/v1/login', userRouter.signIn);
+router.post('api/v1/register', userRouter.signUp);
 
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
