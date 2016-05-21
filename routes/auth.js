@@ -19,9 +19,7 @@ exports.verifyOrdinaryUser = function(req, res, next) {
     if (token) {
         jwt.verify(token, config.secretKey, function(err, decoded) {
             if (err) {
-                var err_ = new Error('You are not authenticated');
-                err_.status = 403;
-                return res.json(err);
+                return res.status(401).json({ message: 'You are not authenticated' });
             } else {
                 req.decoded = decoded;
                 next();
@@ -30,13 +28,13 @@ exports.verifyOrdinaryUser = function(req, res, next) {
     } else {
         var err = new Error('No token provided');
         err.status = 403;
-        return res.json(err);
+        return res.status(403).json({ message: 'No token provided' });
     }
 };
 
 exports.verifyAdmin = function(req, res, next) {
     if (req.decoded.admin) {
-        next()
+        next();
     } else {
         return res.status(401).json({
             error: 'Not enough privileges'

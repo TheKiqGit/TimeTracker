@@ -2,24 +2,48 @@ var express = require('express');
 var userRouter = express.Router();
 var passport = require('passport');
 var Model = require('../models/user');
-var verify = require('./verifyTokens');
+var authenticate = require('./auth');
 
-/* GET users listing. */
+
+
+/* GET all the users */
 exports.getAll = function(req, res, next) {
-    Model.User.forge()
-      .fetchAll()
-      .then(function(user) {
+    Model.Users.forge()
+    .fetch({ columns: ['_id', 'username', 'admin'] })
+    .then(function(user) {
         res.json(user);
-      }).catch(function(err) {
+    }).catch(function(err) {
         console.log(err);
-      });
-}
+    });
+};
+
+/* GET a user given its id */
+exports.getUser = function(req, res, next) {
+  var userID = req.params.userID;
+  Model.User.forge({'_id':userID})
+    .fetch({columns:['_id', 'username', 'admin']})
+    .then(function (user) {
+      res.json(user);
+    });
+};
+
+/* PUT update a user given its id */
+exports.updateUser = function(req, res, next) {
+  
+  var userID = req.params.userID;
+
+  Model.User.forge({'_id':userID})
+    .fetch({columns:['_id', 'username', 'admin']})
+    .then(function (user) {
+      res.json(user);
+    });
+};
 
 /* GET logout */
 exports.signOut = function(req, res){
   req.logout();
   res.status(200).json({message: 'Login user out'});
-}
+};
 
 
 /* POST login. */
@@ -41,7 +65,7 @@ exports.signIn = function(req, res, next) {
         });
       }
 
-      var token = verify.getToken(user);
+      var token = authenticate.getToken(user);
 
       res.status(200).json({
         status: 'Login successful',
@@ -50,7 +74,7 @@ exports.signIn = function(req, res, next) {
       });
     });
   })(req, res, next);
-}
+};
 
 /* POST Register. */
 exports.signUp = function(req, res, next) {
@@ -86,4 +110,4 @@ exports.signUp = function(req, res, next) {
           });
       }
     });
-}
+};
